@@ -10,13 +10,16 @@ import (
 
 type RouteSetup struct {
 	authHandler       *handler.AuthHandler
+	userHandler      *handler.UserHandler
 }
 
 func NewRouteSetup(
 	authHandler *handler.AuthHandler,
+	userHandler *handler.UserHandler,
 ) *RouteSetup {
 	return &RouteSetup{
 		authHandler: authHandler,
+		userHandler:  userHandler,
 	}
 }
 
@@ -40,7 +43,7 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 
 	protected := api.Group("/", middleware.JWTProtected)
 	{
-		protected.Post("/")
+		protected.Get("/user/profile", rs.userHandler.GetProfile)
 	}
 
 }
