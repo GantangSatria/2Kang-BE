@@ -3,7 +3,10 @@ package bootstrap
 import (
 	"2Kang/config"
 	"2Kang/internal/domain/entity"
+	"2Kang/internal/domain/repository"
+	"2Kang/internal/handler"
 	"2Kang/internal/routes"
+	"2Kang/internal/services"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -20,8 +23,16 @@ func InitializeApp() *fiber.App {
 		&entity.Tukang{},
 	)
 
+	userRepo := repository.NewUserRepository(config.DB)
+
+	authService := services.NewAuthService(userRepo)
+
+	authHandler := handler.NewAuthHandler(authService)
+
 	// Register routes
-	routeSetup := routes.NewRouteSetup()
+	routeSetup := routes.NewRouteSetup(
+		authHandler,
+	)
 	routeSetup.Setup(app)
 
 	return app

@@ -9,13 +9,14 @@ import (
 )
 
 type RouteSetup struct {
-	// authHandler       *handler.AuthHandler
+	authHandler       *handler.AuthHandler
 }
 
-func NewRouteSetup() *RouteSetup {
-	// authHandler *handler.AuthHandler
+func NewRouteSetup(
+	authHandler *handler.AuthHandler,
+) *RouteSetup {
 	return &RouteSetup{
-		// authHandler: authHandler,
+		authHandler: authHandler,
 	}
 }
 
@@ -33,5 +34,13 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 	api.Get("/", func(c fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
+
+	api.Post("/register", rs.authHandler.Register)
+	api.Post("/login", rs.authHandler.Login)
+
+	protected := api.Group("/", middleware.JWTProtected)
+	{
+		protected.Post("/")
+	}
 
 }
