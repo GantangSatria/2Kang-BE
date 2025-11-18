@@ -14,6 +14,6 @@ func (s *TukangService) GetTukangList(kategori string) (interface{}, error) {
 	return s.TukangRepo.GetTukangList(kategori)
 }
 
-func (s *TukangService) GetTukangDetail(userID string) (interface{}, error) {
+func (s *TukangService) GetTukangDetail(userID uint) (interface{}, error) {
 	return s.TukangRepo.GetTukangDetail(userID)
 }

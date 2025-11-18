@@ -1,8 +1,8 @@
 package entity
 
 type Tukang struct {
-    ID        string `gorm:"primaryKey"`
-    UserID    string `gorm:"uniqueIndex"`
+    ID        uint `gorm:"primaryKey;autoIncrement"`
+    UserID    uint `gorm:"uniqueIndex"`
     Category  string
     Bio       string
     Services  string

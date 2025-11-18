@@ -9,7 +9,7 @@ type UserRepository interface {
 	Create(user *entity.User) error
 	FindByEmail(email string) (*entity.User, error)
 	CreateTukang(t *entity.Tukang) error
-	GetProfile(userID string) (*entity.User, error)
+	GetProfile(userID uint) (*entity.User, error)
 }
 
 type userRepositoryImpl struct{ db *gorm.DB }
@@ -32,7 +32,7 @@ func (r *userRepositoryImpl) FindByEmail(email string) (*entity.User, error) {
 	return &user, err
 }
 
-func (r *userRepositoryImpl) GetProfile(userID string) (*entity.User, error) {
+func (r *userRepositoryImpl) GetProfile(userID uint) (*entity.User, error) {
 	var user entity.User
 
 	if err := r.db.Where("id = ?", userID).First(&user).Error; err != nil {

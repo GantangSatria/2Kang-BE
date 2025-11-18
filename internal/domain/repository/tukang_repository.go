@@ -28,7 +28,7 @@ func (r TukangRepository) GetTukangList(kategori string) ([]entity.Tukang, error
 	return tukangs, nil
 }
 
-func (r TukangRepository) GetTukangDetail(userID string) (*entity.Tukang, error) {
+func (r TukangRepository) GetTukangDetail(userID uint) (*entity.Tukang, error) {
 	var data entity.Tukang
 
 	if err := r.DB.Where("user_id = ?", userID).First(&data).Error; err != nil {

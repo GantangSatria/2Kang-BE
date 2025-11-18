@@ -14,7 +14,7 @@ func NewUserHandler(s services.UserService) *UserHandler {
 }
 
 func (h *UserHandler) GetProfile(c fiber.Ctx) error {
-	userID := c.Locals("user_id").(string)
+	userID := c.Locals("user_id").(uint)
 
 	profile, err := h.UserService.GetProfile(userID)
 	if err != nil {

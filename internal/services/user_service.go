@@ -12,6 +12,6 @@ func NewUserService(r repository.UserRepository) *UserService {
 	return &UserService{UserRepo: r}
 }
 
-func (s *UserService) GetProfile(userID string) (interface{}, error) {
+func (s *UserService) GetProfile(userID uint) (interface{}, error) {
 	return s.UserRepo.GetProfile(userID)
 }

@@ -25,7 +25,7 @@ func (h *TukangHandler) GetTukangList(c fiber.Ctx) error {
 }
 
 func (h *TukangHandler) GetTukangDetail(c fiber.Ctx) error {
-	userID := c.Params("user_id")
+	userID := c.Locals("user_id").(uint)
 
 	result, err := h.TukangService.GetTukangDetail(userID)
 	if err != nil {
