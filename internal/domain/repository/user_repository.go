@@ -28,7 +28,7 @@ func (r *userRepositoryImpl) CreateTukang(t *entity.Tukang) error {
 
 func (r *userRepositoryImpl) FindByEmail(email string) (*entity.User, error) {
 	var user entity.User
-	err := r.db.Where("email = ?", email).Preload("TukangDetail").First(&user).Error
+	err := r.db.Where("email = ?", email).First(&user).Error
 	return &user, err
 }
 
