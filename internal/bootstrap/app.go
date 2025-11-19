@@ -25,20 +25,24 @@ func InitializeApp() *fiber.App {
 
 	userRepo := repository.NewUserRepository(config.DB)
 	tukangRepo := repository.NewTukangRepository(config.DB)
+	transactionRepo := repository.NewTransactionRepository(config.DB)
 	
 	authService := services.NewAuthService(userRepo, tukangRepo)
 	userService := services.NewUserService(userRepo)
 	tukangService := services.NewTukangService(tukangRepo)
+	transactionService := services.NewTransactionService(transactionRepo, tukangRepo)
 	
 	authHandler := handler.NewAuthHandler(authService)
 	userHandler := handler.NewUserHandler(*userService)
 	tukangHandler := handler.NewTukangHandler(*tukangService)
+	orderHandler := handler.NewOrderHandler(transactionService)
 
 	// Register routes
 	routeSetup := routes.NewRouteSetup(
 		authHandler,
 		userHandler,
 		tukangHandler,
+		orderHandler,
 	)
 	routeSetup.Setup(app)
 
