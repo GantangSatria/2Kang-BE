@@ -33,3 +33,18 @@ func (s *TukangService) GetTukangDetail(id uint) (*entity.Tukang, error) {
 	}
 	return data, nil
 }
+
+func (s *TukangService) UpdateCategory(id uint, category string) error {
+    if category == "" {
+        return fmt.Errorf("category cannot be empty")
+    }
+    return s.TukangRepo.UpdateCategory(id, category)
+}
+
+func (s *TukangService) UpdateBio(id uint, bio string) error {
+    return s.TukangRepo.UpdateBio(id, bio)
+}
+
+func (s *TukangService) UpdateServices(id uint, services string) error {
+    return s.TukangRepo.UpdateServices(id, services)
+}

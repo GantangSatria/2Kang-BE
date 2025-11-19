@@ -26,3 +26,10 @@ func (s *UserService) GetProfile(id uint) (*entity.User, error) {
 
 	return user, nil
 }
+
+func (s *UserService) UpdateName(id uint, name string) error {
+    if name == "" {
+        return fmt.Errorf("name cannot be empty")
+    }
+    return s.UserRepo.UpdateName(id, name)
+}

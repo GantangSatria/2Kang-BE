@@ -10,6 +10,10 @@ type TukangRepository interface {
 	FindByEmail(email string) (*entity.Tukang, error)
 	GetTukangDetail(id uint) (*entity.Tukang, error)
 	GetTukangList(category string) ([]entity.Tukang, error)
+	UpdateCategory(id uint, category string) error
+	UpdateBio(id uint, bio string) error
+	UpdateServices(id uint, services string) error
+
 }
 
 type TukangRepositoryImpl struct {
@@ -51,4 +55,25 @@ func (r *TukangRepositoryImpl) GetTukangList(category string) ([]entity.Tukang, 
 
 	err := query.Find(&list).Error
 	return list, err
+}
+
+func (r *TukangRepositoryImpl) UpdateCategory(id uint, category string) error {
+    return r.db.Model(&entity.Tukang{}).
+        Where("id = ?", id).
+        Update("category", category).
+        Error
+}
+
+func (r *TukangRepositoryImpl) UpdateBio(id uint, bio string) error {
+    return r.db.Model(&entity.Tukang{}).
+        Where("id = ?", id).
+        Update("bio", bio).
+        Error
+}
+
+func (r *TukangRepositoryImpl) UpdateServices(id uint, services string) error {
+    return r.db.Model(&entity.Tukang{}).
+        Where("id = ?", id).
+        Update("services", services).
+        Error
 }
