@@ -26,7 +26,7 @@ func InitializeApp() *fiber.App {
 	userRepo := repository.NewUserRepository(config.DB)
 	tukangRepo := repository.NewTukangRepository(config.DB)
 	
-	authService := services.NewAuthService(userRepo)
+	authService := services.NewAuthService(userRepo, tukangRepo)
 	userService := services.NewUserService(userRepo)
 	tukangService := services.NewTukangService(tukangRepo)
 	

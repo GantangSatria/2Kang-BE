@@ -17,25 +17,37 @@ func NewAuthHandler(service services.AuthService) *AuthHandler {
 
 func (h *AuthHandler) Register(c fiber.Ctx) error {
 	var req request.RegisterRequest
+
+	// Parse body
 	if err := c.Bind().Body(&req); err != nil {
-		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+		return c.Status(400).JSON(fiber.Map{"error": "invalid request format"})
 	}
 
+	// Process
 	if err := h.service.Register(req); err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(fiber.Map{"message": "registered successfully"})
+	return c.JSON(fiber.Map{
+		"message": "registered successfully",
+	})
 }
 
 func (h *AuthHandler) Login(c fiber.Ctx) error {
 	var req request.LoginRequest
-	_ = c.Bind().Body(&req)
 
+	// Parse body
+	if err := c.Bind().Body(&req); err != nil {
+		return c.Status(400).JSON(fiber.Map{"error": "invalid request format"})
+	}
+
+	// Login
 	token, err := h.service.Login(req)
 	if err != nil {
 		return c.Status(400).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.JSON(response.AuthResponse{Token: token})
+	return c.JSON(response.AuthResponse{
+		Token: token,
+	})
 }

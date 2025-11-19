@@ -15,56 +15,69 @@ type AuthService interface {
 }
 
 type authServiceImpl struct {
-	repo repository.UserRepository
+	users   repository.UserRepository
+	tukangs repository.TukangRepository
 }
 
-func NewAuthService(repo repository.UserRepository) AuthService {
-	return &authServiceImpl{repo}
+func NewAuthService(users repository.UserRepository, tukangs repository.TukangRepository) AuthService {
+	return &authServiceImpl{
+		users:   users,
+		tukangs: tukangs,
+	}
 }
 
 func (s *authServiceImpl) Register(req request.RegisterRequest) error {
+
 	hashedPassword, _ := utils.HashPassword(req.Password)
 
-	user := entity.User{
-		Name:     req.FullName,
-		Email:    req.Email,
-		Password: hashedPassword,
-		Role:     entity.Role(req.Role),
-	}
+	switch req.Role {
 
-	// Create user
-	if err := s.repo.Create(&user); err != nil {
-		return err
-	}
+	// ===== REGISTER USER =====
+	case "user":
+		user := entity.User{
+			Name:     req.FullName,
+			Email:    req.Email,
+			Password: hashedPassword,
+		}
+		return s.users.Create(&user)
 
-	// If role is tukang → create empty tukang record
-	if req.Role == "tukang" {
+	// ===== REGISTER TUKANG =====
+	case "tukang":
 		tukang := entity.Tukang{
-			UserID:   user.ID,
+			Name:     req.FullName,
+			Email:    req.Email,
+			Password: hashedPassword,
 			Category: "",
 			Bio:      "",
 			Services: "",
 			Rating:   0,
 		}
-		if err := s.repo.CreateTukang(&tukang); err != nil {
-			return err
+		return s.tukangs.Create(&tukang)
+
+	default:
+		return errors.New("invalid role")
+	}
+}
+
+func (s *authServiceImpl) Login(req request.LoginRequest) (string, error) {
+
+	user, err := s.users.FindByEmail(req.Email)
+	if err == nil {
+		if utils.CheckPassword(req.Password, user.Password) {
+			// kirim role = user
+			token, _ := utils.GenerateJWT(user.ID, user.Email, "user")
+			return token, nil
 		}
 	}
 
-	return nil
-}
-
-
-func (s *authServiceImpl) Login(req request.LoginRequest) (string, error) {
-	user, err := s.repo.FindByEmail(req.Email)
-	if err != nil {
-		return "", errors.New("email not found")
+	tukang, err := s.tukangs.FindByEmail(req.Email)
+	if err == nil {
+		if utils.CheckPassword(req.Password, tukang.Password) {
+			// kirim role = tukang
+			token, _ := utils.GenerateJWT(tukang.ID, tukang.Email, "tukang")
+			return token, nil
+		}
 	}
 
-	if !utils.CheckPassword(req.Password, user.Password) {
-		return "", errors.New("invalid password")
-	}
-
-	token, _ := utils.GenerateJWT(user)
-	return token, nil
+	return "", errors.New("invalid email or password")
 }

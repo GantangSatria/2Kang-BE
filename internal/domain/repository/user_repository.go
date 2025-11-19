@@ -8,22 +8,19 @@ import (
 type UserRepository interface {
 	Create(user *entity.User) error
 	FindByEmail(email string) (*entity.User, error)
-	CreateTukang(t *entity.Tukang) error
-	GetProfile(userID uint) (*entity.User, error)
+	GetProfile(id uint) (*entity.User, error)
 }
 
-type userRepositoryImpl struct{ db *gorm.DB }
+type userRepositoryImpl struct {
+	db *gorm.DB
+}
 
 func NewUserRepository(db *gorm.DB) UserRepository {
-	return &userRepositoryImpl{db}
+	return &userRepositoryImpl{db: db}
 }
 
 func (r *userRepositoryImpl) Create(user *entity.User) error {
 	return r.db.Create(user).Error
-}
-
-func (r *userRepositoryImpl) CreateTukang(t *entity.Tukang) error {
-	return r.db.Create(t).Error
 }
 
 func (r *userRepositoryImpl) FindByEmail(email string) (*entity.User, error) {
@@ -32,12 +29,8 @@ func (r *userRepositoryImpl) FindByEmail(email string) (*entity.User, error) {
 	return &user, err
 }
 
-func (r *userRepositoryImpl) GetProfile(userID uint) (*entity.User, error) {
+func (r *userRepositoryImpl) GetProfile(id uint) (*entity.User, error) {
 	var user entity.User
-
-	if err := r.db.Where("id = ?", userID).First(&user).Error; err != nil {
-		return nil, err
-	}
-
-	return &user, nil
+	err := r.db.First(&user, id).Error
+	return &user, err
 }

@@ -5,35 +5,50 @@ import (
 	"gorm.io/gorm"
 )
 
-type TukangRepository struct {
-	DB *gorm.DB
+type TukangRepository interface {
+	Create(t *entity.Tukang) error
+	FindByEmail(email string) (*entity.Tukang, error)
+	GetTukangDetail(id uint) (*entity.Tukang, error)
+	GetTukangList(category string) ([]entity.Tukang, error)
+}
+
+type TukangRepositoryImpl struct {
+	db *gorm.DB
 }
 
 func NewTukangRepository(db *gorm.DB) TukangRepository {
-	return TukangRepository{DB: db}
+	return &TukangRepositoryImpl{db: db}
 }
 
-func (r TukangRepository) GetTukangList(kategori string) ([]entity.Tukang, error) {
-	var tukangs []entity.Tukang
-	q := r.DB
-
-	if kategori != "" {
-		q = q.Where("kategori = ?", kategori)
-	}
-
-	if err := q.Find(&tukangs).Error; err != nil {
-		return nil, err
-	}
-
-	return tukangs, nil
+// CREATE
+func (r *TukangRepositoryImpl) Create(t *entity.Tukang) error {
+	return r.db.Create(t).Error
 }
 
-func (r TukangRepository) GetTukangDetail(userID uint) (*entity.Tukang, error) {
-	var data entity.Tukang
+// FIND BY EMAIL
+func (r *TukangRepositoryImpl) FindByEmail(email string) (*entity.Tukang, error) {
+	var t entity.Tukang
+	err := r.db.Where("email = ?", email).First(&t).Error
+	return &t, err
+}
 
-	if err := r.DB.Where("user_id = ?", userID).First(&data).Error; err != nil {
-		return nil, err
+// GET DETAIL
+func (r *TukangRepositoryImpl) GetTukangDetail(id uint) (*entity.Tukang, error) {
+	var t entity.Tukang
+	err := r.db.First(&t, id).Error
+	return &t, err
+}
+
+// GET LIST
+func (r *TukangRepositoryImpl) GetTukangList(category string) ([]entity.Tukang, error) {
+	var list []entity.Tukang
+	query := r.db
+
+	// Filter by category
+	if category != "" {
+		query = query.Where("category = ?", category)
 	}
 
-	return &data, nil
+	err := query.Find(&list).Error
+	return list, err
 }

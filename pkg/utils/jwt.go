@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"2Kang/internal/domain/entity"
+	// "2Kang/internal/domain/entity"
 
 	"github.com/gofiber/fiber/v3"
 	"github.com/golang-jwt/jwt/v5"
@@ -13,19 +13,18 @@ import (
 
 var jwtSecret = []byte(os.Getenv("JWT_SECRET"))
 
-func GenerateJWT(user *entity.User) (string, error) {
-
+func GenerateJWT(id uint, email string, role string) (string, error) {
 	claims := jwt.MapClaims{
-		"id":    user.ID,
-		"email": user.Email,
-		"role":  user.Role,
+		"id":    id,
+		"email": email,
+		"role":  role,
 		"exp":   time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
 	return token.SignedString(jwtSecret)
 }
+
 
 func ValidateJWT(c fiber.Ctx) (*jwt.Token, jwt.MapClaims, error) {
 	auth := c.Get("Authorization")
