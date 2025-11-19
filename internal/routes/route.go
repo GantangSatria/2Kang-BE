@@ -46,10 +46,17 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 
 	protected := api.Group("/", middleware.JWTProtected)
 	{
+		// USER
 		protected.Get("/user/profile", rs.userHandler.GetProfile)
+		protected.Patch("/user/name", rs.userHandler.UpdateName)
 
+		// TUKANG
 		protected.Get("/tukang", rs.tukangHandler.GetTukangList)
 		protected.Get("/tukang/:user_id", rs.tukangHandler.GetTukangDetail)
+
+		protected.Patch("/tukang/category", rs.tukangHandler.UpdateCategory)
+		protected.Patch("/tukang/bio", rs.tukangHandler.UpdateBio)
+		protected.Patch("/tukang/services", rs.tukangHandler.UpdateServices)
 	}
 
 }
