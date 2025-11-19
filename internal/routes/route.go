@@ -87,6 +87,7 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Post("/tukang/order/:id/finish", rs.tukangOrderHandler.Finish)
 
 		protected.Get("/tukang/profile", rs.tukangProfileHandler.GetProfile)
+		protected.Patch("/tukang/profile", rs.tukangProfileHandler.UpdateProfile)
 
 	}
 

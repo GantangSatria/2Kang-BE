@@ -14,6 +14,7 @@ type TukangRepository interface {
 	UpdateBio(id uint, bio string) error
 	UpdateServices(id uint, services string) error
 	FindByID(id uint) (*entity.Tukang, error)
+	Update(t *entity.Tukang) error
 }
 
 type TukangRepositoryImpl struct {
@@ -84,4 +85,11 @@ func (r *TukangRepositoryImpl) FindByID(id uint) (*entity.Tukang, error) {
         return nil, err
     }
     return &t, nil
+}
+
+func (r *TukangRepositoryImpl) Update(t *entity.Tukang) error {
+    return r.db.Model(&entity.Tukang{}).
+        Where("id = ?", t.ID).
+        Updates(t).
+        Error
 }

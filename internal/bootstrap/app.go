@@ -21,11 +21,14 @@ func InitializeApp() *fiber.App {
 	db.AutoMigrate(
 		&entity.User{},
 		&entity.Tukang{},
+		&entity.Transaction{},
+		&entity.Review{},
 	)
 
 	userRepo := repository.NewUserRepository(config.DB)
 	tukangRepo := repository.NewTukangRepository(config.DB)
 	transactionRepo := repository.NewTransactionRepository(config.DB)
+	reviewRepo := repository.NewReviewRepository(config.DB)
 	
 	authService := services.NewAuthService(userRepo, tukangRepo)
 	userService := services.NewUserService(userRepo)
@@ -33,6 +36,7 @@ func InitializeApp() *fiber.App {
 	transactionService := services.NewTransactionService(transactionRepo, tukangRepo)
 	tukangHomeService := services.NewTukangHomeService(tukangRepo, transactionRepo)
 	tukangOrderService := services.NewTukangOrderService(transactionRepo)
+	tukangProfileService := services.NewTukangProfileService(tukangRepo, reviewRepo)
 	
 	authHandler := handler.NewAuthHandler(authService)
 	userHandler := handler.NewUserHandler(*userService)
@@ -40,6 +44,7 @@ func InitializeApp() *fiber.App {
 	orderHandler := handler.NewOrderHandler(transactionService)
 	tukangHomeHandler := handler.NewTukangHomeHandler(tukangHomeService)
 	tukangOrderHandler := handler.NewTukangOrderHandler(tukangOrderService)
+	tukangProfileHandler := handler.NewTukangProfileHandler(tukangProfileService)
 
 	// Register routes
 	routeSetup := routes.NewRouteSetup(
@@ -49,6 +54,7 @@ func InitializeApp() *fiber.App {
 		orderHandler,
 		tukangHomeHandler,
 		tukangOrderHandler,
+		tukangProfileHandler,
 	)
 	routeSetup.Setup(app)
 
