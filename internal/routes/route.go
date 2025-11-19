@@ -15,6 +15,7 @@ type RouteSetup struct {
 	orderHandler *handler.OrderHandler
 	tukangHomeHandler *handler.TukangHomeHandler
 	tukangOrderHandler *handler.TukangOrderHandler
+	tukangProfileHandler *handler.TukangProfileHandler
 }
 
 func NewRouteSetup(
@@ -24,6 +25,7 @@ func NewRouteSetup(
 	orderHandler *handler.OrderHandler,
 	tukangHomeHandler *handler.TukangHomeHandler,
 	tukangOrderHandler *handler.TukangOrderHandler,
+	tukangProfileHandler *handler.TukangProfileHandler,
 ) *RouteSetup {
 	return &RouteSetup{
 		authHandler: authHandler,
@@ -32,6 +34,7 @@ func NewRouteSetup(
 		orderHandler: orderHandler,
 		tukangHomeHandler: tukangHomeHandler,
 		tukangOrderHandler: tukangOrderHandler,
+		tukangProfileHandler: tukangProfileHandler,
 	}
 }
 
@@ -83,6 +86,7 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Post("/tukang/order/:id/start", rs.tukangOrderHandler.Start)
 		protected.Post("/tukang/order/:id/finish", rs.tukangOrderHandler.Finish)
 
+		protected.Get("/tukang/profile", rs.tukangProfileHandler.GetProfile)
 
 	}
 
