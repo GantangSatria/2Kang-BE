@@ -13,6 +13,7 @@ type RouteSetup struct {
 	userHandler      *handler.UserHandler
 	tukangHandler *handler.TukangHandler
 	orderHandler *handler.OrderHandler
+	tukangHomeHandler *handler.TukangHomeHandler
 }
 
 func NewRouteSetup(
@@ -20,12 +21,14 @@ func NewRouteSetup(
 	userHandler *handler.UserHandler,
 	tukangHandler *handler.TukangHandler,
 	orderHandler *handler.OrderHandler,
+	tukangHomeHandler *handler.TukangHomeHandler,
 ) *RouteSetup {
 	return &RouteSetup{
 		authHandler: authHandler,
 		userHandler:  userHandler,
 		tukangHandler: tukangHandler,
 		orderHandler: orderHandler,
+		tukangHomeHandler: tukangHomeHandler,
 	}
 }
 
@@ -60,6 +63,8 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Patch("/tukang/category", rs.tukangHandler.UpdateCategory)
 		protected.Patch("/tukang/bio", rs.tukangHandler.UpdateBio)
 		protected.Patch("/tukang/services", rs.tukangHandler.UpdateServices)
+
+		protected.Get("/tukang/home", rs.tukangHomeHandler.GetHome)
 
 		// inside protected group
 		protected.Post("/orders", rs.orderHandler.CreateOrder)

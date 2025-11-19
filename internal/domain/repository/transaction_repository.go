@@ -11,6 +11,8 @@ type TransactionRepository interface {
     GetByUser(userID uint) ([]entity.Transaction, error)
     GetByTukang(tukangID uint) ([]entity.Transaction, error)
     UpdateStatus(id uint, status entity.TransactionStatus) error
+	GetByTukangAndStatus(tukangID uint, status entity.TransactionStatus) ([]entity.Transaction, error)
+
 }
 
 type transactionRepoImpl struct {
@@ -51,4 +53,14 @@ func (r *transactionRepoImpl) GetByTukang(tukangID uint) ([]entity.Transaction, 
 
 func (r *transactionRepoImpl) UpdateStatus(id uint, status entity.TransactionStatus) error {
     return r.db.Model(&entity.Transaction{}).Where("id = ?", id).Update("status", status).Error
+}
+
+func (r *transactionRepoImpl) GetByTukangAndStatus(tukangID uint, status entity.TransactionStatus) ([]entity.Transaction, error) {
+    var list []entity.Transaction
+    err := r.db.
+        Where("tukang_id = ? AND status = ?", tukangID, status).
+        Order("created_at desc").
+        Find(&list).Error
+
+    return list, err
 }
