@@ -32,12 +32,14 @@ func InitializeApp() *fiber.App {
 	tukangService := services.NewTukangService(tukangRepo)
 	transactionService := services.NewTransactionService(transactionRepo, tukangRepo)
 	tukangHomeService := services.NewTukangHomeService(tukangRepo, transactionRepo)
+	tukangOrderService := services.NewTukangOrderService(transactionRepo)
 	
 	authHandler := handler.NewAuthHandler(authService)
 	userHandler := handler.NewUserHandler(*userService)
 	tukangHandler := handler.NewTukangHandler(*tukangService)
 	orderHandler := handler.NewOrderHandler(transactionService)
 	tukangHomeHandler := handler.NewTukangHomeHandler(tukangHomeService)
+	tukangOrderHandler := handler.NewTukangOrderHandler(tukangOrderService)
 
 	// Register routes
 	routeSetup := routes.NewRouteSetup(
@@ -46,6 +48,7 @@ func InitializeApp() *fiber.App {
 		tukangHandler,
 		orderHandler,
 		tukangHomeHandler,
+		tukangOrderHandler,
 	)
 	routeSetup.Setup(app)
 
