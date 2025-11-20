@@ -64,7 +64,7 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 
 		// TUKANG
 		protected.Get("/tukang", rs.tukangHandler.GetTukangList)
-		protected.Get("/tukang/:user_id", rs.tukangHandler.GetTukangDetail)
+		protected.Get("/tukang/:id", rs.tukangHandler.GetTukangDetail)
 
 		protected.Patch("/tukang/category", rs.tukangHandler.UpdateCategory)
 		protected.Patch("/tukang/bio", rs.tukangHandler.UpdateBio)

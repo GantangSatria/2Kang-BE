@@ -3,6 +3,7 @@ package handler
 import (
 	"2Kang/internal/services"
 	"2Kang/pkg/dto/request"
+	"strconv"
 
 	"github.com/gofiber/fiber/v3"
 )
@@ -27,12 +28,22 @@ func (h *TukangHandler) GetTukangList(c fiber.Ctx) error {
 }
 
 func (h *TukangHandler) GetTukangDetail(c fiber.Ctx) error {
-	userID := c.Locals("user_id").(uint)
 
-	result, err := h.TukangService.GetTukangDetail(userID)
-	if err != nil {
-		return c.Status(404).JSON(fiber.Map{"error": err.Error()})
-	}
+	paramID := c.Params("id") 
+
+    id, err := strconv.ParseUint(paramID, 10, 32)
+    if err != nil {
+        return c.Status(400).JSON(fiber.Map{
+            "error": "ID tidak valid",
+        })
+    }
+	
+    result, err := h.TukangService.GetTukangDetail(uint(id))
+    if err != nil {
+        return c.Status(404).JSON(fiber.Map{
+            "error": "Tukang tidak ditemukan",
+        })
+    }
 
 	return c.JSON(result)
 }
