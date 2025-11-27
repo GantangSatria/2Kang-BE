@@ -66,6 +66,7 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Get("/tukang", rs.tukangHandler.GetTukangList)
 		protected.Get("/tukang/profile", rs.tukangProfileHandler.GetProfile)
 		protected.Patch("/tukang/profile", rs.tukangProfileHandler.UpdateProfile)
+		protected.Get("/tukang/orders", rs.orderHandler.GetOrdersForTukang)
 		protected.Get("/tukang/:id", rs.tukangHandler.GetTukangDetail)
 
 		protected.Patch("/tukang/category", rs.tukangHandler.UpdateCategory)
@@ -80,7 +81,6 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Get("/orders/:id", rs.orderHandler.GetOrderDetail)
 
 		// tukang endpoints
-		protected.Get("/tukang/orders", rs.orderHandler.GetOrdersForTukang)
 		protected.Patch("/tukang/orders/status", rs.orderHandler.UpdateOrderStatus)
 
 		// TUKANG ORDER

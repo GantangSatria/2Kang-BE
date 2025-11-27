@@ -20,8 +20,7 @@ func (h *TukangOrderHandler) Accept(c fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid order id"})
 	}
 
-	tukangIDStr := c.Locals("user_id").(string)
-	tukangID, _ := strconv.ParseUint(tukangIDStr, 10, 32)
+	tukangID := c.Locals("user_id").(uint)
 
 	err = h.Service.AcceptOrder(uint(orderID), uint(tukangID))
 	if err != nil {
@@ -37,8 +36,7 @@ func (h *TukangOrderHandler) Start(c fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid order id"})
 	}
 
-	tukangIDStr := c.Locals("user_id").(string)
-	tukangID, _ := strconv.ParseUint(tukangIDStr, 10, 32)
+	tukangID := c.Locals("user_id").(uint)
 
 	err = h.Service.StartOrder(uint(orderID), uint(tukangID))
 	if err != nil {
@@ -54,8 +52,7 @@ func (h *TukangOrderHandler) Finish(c fiber.Ctx) error {
 		return c.Status(400).JSON(fiber.Map{"error": "invalid order id"})
 	}
 
-	tukangIDStr := c.Locals("user_id").(string)
-	tukangID, _ := strconv.ParseUint(tukangIDStr, 10, 32)
+	tukangID := c.Locals("user_id").(uint)
 
 	err = h.Service.FinishOrder(uint(orderID), uint(tukangID))
 	if err != nil {
@@ -66,8 +63,7 @@ func (h *TukangOrderHandler) Finish(c fiber.Ctx) error {
 }
 
 func (h *TukangOrderHandler) Reject(c fiber.Ctx) error {
-    orderIDParam := c.Params("id")
-    orderID, _ := strconv.ParseUint(orderIDParam, 10, 32)
+    orderID, _ := strconv.ParseUint(c.Params("id"), 10, 32)
     tukangID := c.Locals("user_id").(uint)
 
     err := h.Service.RejectOrder(uint(orderID), tukangID)

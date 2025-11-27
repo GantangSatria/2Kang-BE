@@ -132,10 +132,6 @@ func (h *OrderHandler) GetOrderDetail(c fiber.Ctx) error {
 
 // TUKANG: get orders assigned to tukang (requires role check)
 func (h *OrderHandler) GetOrdersForTukang(c fiber.Ctx) error {
-    roleI := c.Locals("role")
-    if roleI == nil || roleI.(string) != "tukang" {
-        return c.Status(403).JSON(fiber.Map{"error": "forbidden"})
-    }
     uidI := c.Locals("user_id")
     if uidI == nil {
         return c.Status(401).JSON(fiber.Map{"error": "unauthorized"})

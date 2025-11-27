@@ -75,9 +75,9 @@ func (s *TukangOrderService) RejectOrder(orderID uint, tukangID uint) error {
     if err != nil {
         return errors.New("order tidak ditemukan")
     }
- 
-    if order.Status != "Pending" {
-        return errors.New("hanya order pending yang bisa dihapus/ditolak")
+
+	if order.TukangID != tukangID {
+        return errors.New("tidak boleh menghapus order milik tukang lain")
     }
  
     return s.TransactionRepo.DeleteOrder(orderID)
