@@ -68,3 +68,17 @@ func (s *TukangOrderService) FinishOrder(orderID uint, tukangID uint) error {
 
 	return s.TransactionRepo.UpdateStatus(orderID, entity.StatusDone)
 }
+
+func (s *TukangOrderService) RejectOrder(orderID uint, tukangID uint) error {
+ 
+    order, err := s.TransactionRepo.GetByID(orderID)
+    if err != nil {
+        return errors.New("order tidak ditemukan")
+    }
+ 
+    if order.Status != "Pending" {
+        return errors.New("hanya order pending yang bisa dihapus/ditolak")
+    }
+ 
+    return s.TransactionRepo.DeleteOrder(orderID)
+}

@@ -64,3 +64,16 @@ func (h *TukangOrderHandler) Finish(c fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{"message": "order finished"})
 }
+
+func (h *TukangOrderHandler) Reject(c fiber.Ctx) error {
+    orderIDParam := c.Params("id")
+    orderID, _ := strconv.ParseUint(orderIDParam, 10, 32)
+    tukangID := c.Locals("user_id").(uint)
+
+    err := h.Service.RejectOrder(uint(orderID), tukangID)
+    if err != nil {
+        return c.Status(400).JSON(fiber.Map{"error": err.Error()})
+    }
+
+    return c.JSON(fiber.Map{"message": "Order berhasil dihapus (ditolak)"})
+}

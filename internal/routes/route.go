@@ -64,6 +64,8 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 
 		// TUKANG
 		protected.Get("/tukang", rs.tukangHandler.GetTukangList)
+		protected.Get("/tukang/profile", rs.tukangProfileHandler.GetProfile)
+		protected.Patch("/tukang/profile", rs.tukangProfileHandler.UpdateProfile)
 		protected.Get("/tukang/:id", rs.tukangHandler.GetTukangDetail)
 
 		protected.Patch("/tukang/category", rs.tukangHandler.UpdateCategory)
@@ -85,9 +87,9 @@ func (rs *RouteSetup) Setup(app *fiber.App) {
 		protected.Post("/tukang/order/:id/accept", rs.tukangOrderHandler.Accept)
 		protected.Post("/tukang/order/:id/start", rs.tukangOrderHandler.Start)
 		protected.Post("/tukang/order/:id/finish", rs.tukangOrderHandler.Finish)
+		protected.Delete("/tukang/order/:id/reject", rs.tukangOrderHandler.Reject)
 
-		protected.Get("/tukang/profile", rs.tukangProfileHandler.GetProfile)
-		protected.Patch("/tukang/profile", rs.tukangProfileHandler.UpdateProfile)
+
 
 	}
 

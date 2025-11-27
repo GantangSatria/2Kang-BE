@@ -12,7 +12,7 @@ type TransactionRepository interface {
     GetByTukang(tukangID uint) ([]entity.Transaction, error)
     UpdateStatus(id uint, status entity.TransactionStatus) error
 	GetByTukangAndStatus(tukangID uint, status entity.TransactionStatus) ([]entity.Transaction, error)
-
+	DeleteOrder(id uint) error 
 }
 
 type transactionRepoImpl struct {
@@ -63,4 +63,8 @@ func (r *transactionRepoImpl) GetByTukangAndStatus(tukangID uint, status entity.
         Find(&list).Error
 
     return list, err
+}
+
+func (r *transactionRepoImpl) DeleteOrder(id uint) error {
+    return r.db.Unscoped().Delete(&entity.Transaction{}, id).Error
 }
